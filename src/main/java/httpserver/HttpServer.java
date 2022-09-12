@@ -9,7 +9,7 @@ public class HttpServer {
     private int port;
     private int maxThreads;
     private ServerSocket serverSocket;
-    private ArrayDeque<WorkerThread> threads;
+    private ArrayDeque<WorkerThread> threads = new ArrayDeque<>();
 
     /**
      * Create a new HttpServer instance
@@ -18,7 +18,7 @@ public class HttpServer {
      * @throws IOException may throw IOException due to socket failures
      */
     public HttpServer(int port) throws IOException {
-        this(port, 100);
+        this(port, 2);
     }
 
     /**
@@ -31,6 +31,7 @@ public class HttpServer {
      */
     public HttpServer(int port, int maxThreads) throws IOException {
         this.port = port;
+        this.maxThreads = maxThreads;
         this.serverSocket = new ServerSocket(this.port);
     }
 
@@ -38,25 +39,37 @@ public class HttpServer {
      * Start listening on server port
      */
     public void start() {
-        while (serverSocket.isBound() && !serverSocket.isClosed()) {
-            // on listening
-            try {
+        try{
+            while (serverSocket.isBound() && !serverSocket.isClosed()) {
+                // on listening
                 Socket socket = serverSocket.accept();
 
                 WorkerThread workerThread = new WorkerThread(socket);
                 insertNewThread(workerThread);      // insert the current thread into threadPool
                 workerThread.start();               // start handling new thread
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    serverSocket.close();
-                } catch (IOException ignored) { }
+                System.out.println("accepted new connection: " + socket.getInetAddress());
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                serverSocket.close();
+            } catch (IOException ignored) { }
         }
     }
 
+    /**
+     * insert new thread into the thread-pool, and remove the first entry
+     * if thread number exceeds the maxThread limit
+     * @param workerThread thread to insert
+     */
     private void insertNewThread(WorkerThread workerThread) {
-
+        this.threads.add(workerThread);
+        if (this.threads.size() > this.maxThreads) {
+            if (this.threads.peekFirst() != null && this.threads.peekFirst().isAlive()) {
+                this.threads.peekFirst().interrupt();
+            }
+            this.threads.removeFirst();
+        }
     }
 }
