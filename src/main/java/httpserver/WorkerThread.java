@@ -26,6 +26,7 @@ public class WorkerThread extends Thread {
     public void run() {
         byte[] readBuffer = new byte[this.mtu];
         try {
+            //noinspection InfiniteLoopStatement
             while(true) {
                 InputStream in = socket.getInputStream();
                 int len = in.read(readBuffer);
