@@ -1,12 +1,16 @@
 package httpserver;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Date;
 
 public class WorkerThread extends Thread {
-    private static int entryCount = 0;
-    private final int threadId;
-    public final Socket socket;
+    private static  int entryCount = 0;
+    private final   int threadId;
+    public  final   int mtu = 2048;
+    public  final   Socket socket;
 
     public WorkerThread(Socket socket) {
         entryCount += 1;
@@ -20,7 +24,19 @@ public class WorkerThread extends Thread {
 
     @Override
     public void run() {
-        super.run();
+        byte[] readBuffer = new byte[this.mtu];
+        try {
+            while(true) {
+                InputStream in = socket.getInputStream();
+                int len = in.read(readBuffer);
+                String msg = new String(readBuffer, 0, len);
+                System.out.println(msg);
+                OutputStream outputStream = socket.getOutputStream();
+                outputStream.write(("ACK: " + msg).getBytes(StandardCharsets.UTF_8));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

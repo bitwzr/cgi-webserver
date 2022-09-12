@@ -39,6 +39,7 @@ public class HttpServer {
      * Start listening on server port
      */
     public void start() {
+        System.out.println("start listening...");
         try{
             while (serverSocket.isBound() && !serverSocket.isClosed()) {
                 // on listening
