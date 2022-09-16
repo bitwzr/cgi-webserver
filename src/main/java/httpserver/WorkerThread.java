@@ -1,5 +1,7 @@
 package httpserver;
 
+import cgi.CGIData;
+import cgi.CGIServer;
 import config.HttpServerConfig;
 import org.aeonbits.owner.ConfigFactory;
 
@@ -96,11 +98,12 @@ public class WorkerThread extends Thread {
 //                sos.write(("ACK: " + http_header).getBytes(StandardCharsets.UTF_8));
 
                 if(ahh.method.equals("GET")) {
-                    if(ahh.URL.equals("/")) {
-                        ahh.URL += "index.html";
+                    String htmlURL = ahh.URL;
+                    if(htmlURL.equals("/")) {
+                        htmlURL += "index.html";
                     }
-                    ahh.URL = httpServerConfig.htmlPath() + ahh.URL;
-                    File f = new File(ahh.URL);
+                    htmlURL = httpServerConfig.htmlPath() + htmlURL;
+                    File f = new File(htmlURL);
                     HttpResponse hr;
                     if(!f.exists()) {
                         hr = new HttpResponse("Not Found"); //404错误
@@ -122,7 +125,20 @@ public class WorkerThread extends Thread {
 
                 }
                 else { // ahh.method.equals("POST")
-
+                    CGIData cgi_data = CGIServer.cgi(ahh, socket, http_data); //交给CGI解析模块处理
+                    if(cgi_data.data != null && cgi_data.head != null){
+                        sos.write("HTTP/1.1 200 OK".getBytes());
+                        sos.write("\r\n".getBytes());
+                        sos.write(("Server: " + httpServerConfig.serverName() + "\r\n").getBytes());
+                        sos.write(cgi_data.head.getBytes());
+                        sos.write("\r\n".getBytes());
+                        sos.write(("Connection: Close\r\n").getBytes());
+                        sos.write("Content-Type: ".getBytes());
+                        sos.write(String.valueOf(cgi_data.data.length).getBytes()); //获取CGI解析结果长度
+                        sos.write("\r\n\r\n".getBytes());
+                        sos.write(cgi_data.data); //输出CGI部分
+                        sos.flush();
+                    }
                 }
             }
         } catch (IOException e) {

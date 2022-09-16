@@ -18,7 +18,7 @@ public interface HttpServerConfig extends Config {
     @DefaultValue("test")
     String serverName();
 
-    @DefaultValue("1")
+    @DefaultValue("true")
     boolean cgiEnable();
 
     @DefaultValue("./src/cgi_bin")

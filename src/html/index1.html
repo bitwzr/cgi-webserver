@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Hello CGI</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>POST测试</title>
 </head>
+
 <body>
+<tr><td>
+    <div style="font-weight:bold; font-size:15px">Method: POST</div>
+    <div>lease input two number:</div>
+        <form method="post" action="plus.cgi">
+            <input type="txt" size="3" name="m">*
+            <input type="txt" size="3" name="n">=
+            <input type="submit" value="result">
+        </form>
+</td></tr>
 
 </body>
 </html>

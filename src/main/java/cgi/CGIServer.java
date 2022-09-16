@@ -21,22 +21,25 @@ public abstract class CGIServer {
 
         HttpServerConfig httpServerConfig = ConfigFactory.create(HttpServerConfig.class);
 
+        String cgiURL = httpServerConfig.cgiPath() + ahh.URL;
+        File f = new File(cgiURL);
+
         String[] env = new String[22];
         env[0] = "CONTENT_TYPE="	+	sn(ahh.map.get("Content-Type"));
-        env[1] = "PATH_TRANSLATED="	+	ahh.file.getAbsolutePath();
+        env[1] = "PATH_TRANSLATED="	+	f.getAbsolutePath();
         env[2] = "QUERY_STRING="	+	sn(ahh.get_query);
         env[3] = "REMOTE_ADDR="		+	sn(s.getInetAddress().getHostAddress());
         env[4] = "REMOTE_HOST="		+	sn(s.getInetAddress().getHostName());
         env[5] = "REQUEST_METHOD="	+	ahh.method;
-        env[6] = "SCRIPT_NAME="		+	ahh.file.getName();
+        env[6] = "SCRIPT_NAME="		+	f.getName();
         env[7] = "SERVER_NAME="		+	sn(ahh.map.get("Host"));
         env[8] = "SERVER_PORT="		+	String.valueOf(httpServerConfig.port());
         env[9] = "SERVER_SOFTWARE="	+	httpServerConfig.serverName();
         env[10]= "SERVER_PROTOCOL=HTTP/1.1";
         env[11]= "GATEWAY_INTERFACE=CGI/1.1";
-        env[12]= "PATH_INFO="		+	sn( ahh.file.getAbsolutePath()
-                .substring(0, ahh.file.getAbsolutePath().length()
-                        - ahh.file.getName().length()) );
+        env[12]= "PATH_INFO="		+	sn( f.getAbsolutePath()
+                .substring(0, f.getAbsolutePath().length()
+                        - f.getName().length()) );
         env[13]= "REMOTE_IDENT=";
         env[14]= "REMOTE_USER=";
         env[15]= "AUTH_TYPE=";
@@ -59,14 +62,16 @@ public abstract class CGIServer {
     public static CGIData cgi(AnalysisHttpHeader ahh, Socket s, byte[] http_data) {
 
         HttpServerConfig httpServerConfig = ConfigFactory.create(HttpServerConfig.class);
-
+        String cgiURL = httpServerConfig.cgiPath() + ahh.URL;
         CGIData cgi_data = new CGIData();
         if (httpServerConfig.cgiEnable()) {
             try {
                 String[] env = createENV(ahh,s);
-                File f = new File(httpServerConfig.cgiPath());
+                System.out.println(env[16]);
+                System.out.println(cgiURL);
+                File f = new File(cgiURL);
                 Process cgi_pro = Runtime.getRuntime().exec(
-                        httpServerConfig.cgiPath() , env , f.getParentFile());
+                        f.getAbsolutePath() , env , f.getParentFile());
                 writePostMessage(cgi_pro.getOutputStream(),http_data);
                 //用线程控制方式程序死掉
                 CgiThread cgi_thread = new CgiThread(cgi_pro);
@@ -89,6 +94,7 @@ public abstract class CGIServer {
 //                }
             }
         }
+        System.out.println(cgi_data.data);
         return cgi_data;
     }
 

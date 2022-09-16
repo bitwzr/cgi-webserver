@@ -4,6 +4,7 @@ import config.HttpServerConfig;
 import org.aeonbits.owner.ConfigFactory;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -100,12 +101,6 @@ public class AnalysisHttpHeader {
 
 //        if(URL.endsWith("/"))
 //            URL += httpServerConfig.homePage();
-//
-//        StringTokenizer st_type = new StringTokenizer(URL,".");
-//        while(st_type.hasMoreTokens()){
-//            file_type = st_type.nextToken().toLowerCase();
-//        }
-//
 //        file = new File(httpServerConfig.webPath() + URL);
     }
 }
