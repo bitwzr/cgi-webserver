@@ -43,9 +43,9 @@ public class WorkerThread extends Thread {
     public void run() {
         byte[] readBuffer = new byte[this.mtu];
         try {
-            //noinspection InfiniteLoopStatement
             httpServerConfig = ConfigFactory.create(HttpServerConfig.class);
 
+            //noinspection InfiniteLoopStatement
             while(true) {
                 BufferedReader br = new BufferedReader(
                         new InputStreamReader(socket.getInputStream())); //获取输入流
