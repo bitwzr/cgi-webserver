@@ -62,6 +62,7 @@ public class HttpResponse {
         if(content_type!=null){
             s.append("Content-Type: "+content_type+"\r\n");
             s.append("Content-Length: "+String.valueOf(content_length)+ "\r\n");
+            System.out.println(content_length);
         }
         s.append("Date: "+dateFormat.format(date)+" GMT\r\n");
         s.append("Connection: Close\r\n");
