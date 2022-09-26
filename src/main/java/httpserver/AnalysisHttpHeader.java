@@ -11,7 +11,6 @@ import java.util.StringTokenizer;
 
 /**
  * 分析HTTP头部
- * @author 蠍ヤ緣
  *
  */
 public class AnalysisHttpHeader {
