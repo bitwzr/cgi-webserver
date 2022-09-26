@@ -14,6 +14,9 @@ In the config file, all configuration items are specified in `key=value` format.
         maxThreads=1024
         ```
 
+You can also specify the configurations through the environmental variables, 
+and these items have higher priority than the configuration files.
+
 ### File Tree
 ```bash
 cgi-webserver
