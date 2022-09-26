@@ -118,9 +118,7 @@ public class WorkerThread extends Thread {
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException ignored) { }
     }
 
     @Override
