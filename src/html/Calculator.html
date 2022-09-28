@@ -89,25 +89,20 @@
 </style>
 <body>
 
-<div id="myDiv"><h2>点击修改内容</h2></div>
+<div id="myDiv"><h2>点击按钮修改内容</h2></div>
 <button type="button" onclick="loadXMLDoc()">提交</button>
-<form name="input1">
+<form name="input1" method="post" action="plus.cgi">
     <p id="calcu">计算器功能</p>
-    <input type="text" name="textie" class="mytxt">
-    <select>
-        <option>+</option>
-        <option>-</option>
-        <option>x</option>
-        <option>/</option>
-        <option>%</option>
+    <input type="text" name="m" class="mytxt">
+    <select name="op" type="text">
+        <option value="0">+</option>
+        <option value="1">-</option>
+        <option value="2">x</option>
+        <option value="3">/</option>
+        <option value="4">%</option>
     </select>
-    <input type="text" name="text2" class="mytxt">
-    <button type="button">提交</button>
-    <button type="button">重置</button>
-</form>
-<form name="output">
-    <p>结果</p>
-    <textarea type="text" name="text_output" id="text3"></textarea>
+    <input type="text" name="n" class="mytxt">
+    <input type="submit" value="Submit">
 </form>
 <a href="index.html">返回主页</a>
 </body>

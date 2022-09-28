@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 
 public abstract class CGIServer {
 
@@ -67,8 +68,8 @@ public abstract class CGIServer {
         if (httpServerConfig.cgiEnable()) {
             try {
                 String[] env = createENV(ahh,s);
-                System.out.println(env[16]);
-                System.out.println(cgiURL);
+//                System.out.println(env[16]);
+//                System.out.println(cgiURL);
                 File f = new File(cgiURL);
                 Process cgi_pro = Runtime.getRuntime().exec(
                         f.getAbsolutePath() , env , f.getParentFile());
@@ -89,12 +90,8 @@ public abstract class CGIServer {
                 cgi_data.head = new String(cgi_thread.head);
                 cgi_data.data = cgi_thread.data;
             } catch (IOException e) {
-//                synchronized(ServerLog.syn){
-//                    ServerLog.error("CGI IO异常");
-//                }
             }
         }
-        System.out.println(cgi_data.data);
         return cgi_data;
     }
 
