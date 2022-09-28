@@ -12,7 +12,7 @@ char header[] =
 	        "Content-type:text/html\r\n\r\n"
 	        "<html>\n"
 	        "<head>\n"
-	        "<title>Testing Post</title>\n"
+	        "<title>RESULT</title>\n"
 	        "</head>\n"
 	        "<style>\n"
             "body{ background-image: url(\"calculator.jpeg\"); }\n"
