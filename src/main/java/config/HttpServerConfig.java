@@ -32,4 +32,13 @@ public interface HttpServerConfig extends Config {
 
     @DefaultValue("5000")
     int maxCGITime();
+
+    @DefaultValue("./log/")
+    String logPath();
+
+    @DefaultValue("./errorlog/")
+    String errorLogPath();
+
+    @DefaultValue("1")
+    int logFlush();
 }
