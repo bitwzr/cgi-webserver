@@ -21,6 +21,9 @@ public class WorkerThread extends Thread {
         entryCount += 1;
         threadId = entryCount;
         this.socket = socket;
+        synchronized (ServerLog.syn) {
+            ServerLog.log("Connection from " + socket.getInetAddress().getHostAddress() + " established.");
+        }
     }
 
     public int getThreadId() {
@@ -62,7 +65,10 @@ public class WorkerThread extends Thread {
                     int realLen = br.read(dataTemp);
                     httpData = new String(dataTemp).getBytes(); //以字节的方式读取
                     if (realLen != dataLen) {
-                        System.out.println("Data read from HTTP packet does not match the length specified in data length fields ");
+                        System.out.println("Data read from HTTP packet does not match the length specified in data length fields.");
+                    }
+                    synchronized (ServerLog.syn) {
+                        ServerLog.log("Data read from " + socket.getInetAddress().getHostAddress() + " does not match the length specified in data length fields.");
                     }
                 }
                 else{
@@ -80,13 +86,22 @@ public class WorkerThread extends Thread {
                         htmlURL += "index.html";
                     }
                     htmlURL = httpServerConfig.htmlPath() + htmlURL;
+                    synchronized (ServerLog.syn) {
+                        ServerLog.log("Receive a GET request from " + socket.getInetAddress().getHostAddress() + "  :   " + htmlURL);
+                    }
                     File file = new File(htmlURL);
                     if(!file.exists()) {
                         httpResponse = new HttpResponse("Not Found"); //404错误
                         file = new File(httpServerConfig.notFoundPath());
+                        synchronized (ServerLog.syn) {
+                            ServerLog.log("Send NotFound to " + socket.getInetAddress().getHostAddress());
+                        }
                     }
                     else {
                         httpResponse = new HttpResponse("OK"); //200 OK
+                        synchronized (ServerLog.syn) {
+                            ServerLog.log("Send OK to " + socket.getInetAddress().getHostAddress());
+                        }
                     }
                     int numOfBytes = (int) file.length(); //文件长度
                     httpResponse.setContentType("text/html", numOfBytes); //设置响应头部的文件长度
@@ -98,10 +113,19 @@ public class WorkerThread extends Thread {
                     outputStream.flush();
                 }
                 else if(analysisHttpHeader.method.equals("HEAD")) {
+                    synchronized (ServerLog.syn) {
+                        ServerLog.log("Receive a HEAD request from " + socket.getInetAddress().getHostAddress());
+                    }
                     httpResponse = new HttpResponse("OK");
                     outputStream.write(httpResponse.getResponse().getBytes()); //生成HTTP响应
+                    synchronized (ServerLog.syn) {
+                        ServerLog.log("Send OK to " + socket.getInetAddress().getHostAddress());
+                    }
                 }
                 else { // ahh.method.equals("POST")
+                    synchronized (ServerLog.syn) {
+                        ServerLog.log("Receive a POST request from " + socket.getInetAddress().getHostAddress() + " with HTTP DATA.");
+                    }
                     CGIData cgi_data = CGIServer.cgi(analysisHttpHeader, socket, httpData); //交给CGI解析模块处理
                     if(cgi_data.data != null && cgi_data.head != null){
                         outputStream.write("HTTP/1.1 200 OK".getBytes());
@@ -115,17 +139,31 @@ public class WorkerThread extends Thread {
                         outputStream.write("\r\n\r\n".getBytes());
                         outputStream.write(cgi_data.data); //输出CGI部分
                         outputStream.flush();
+                        synchronized (ServerLog.syn) {
+                            ServerLog.log("Send OK to " + socket.getInetAddress().getHostAddress());
+                        }
                     }
                 }
             }
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) {
+            synchronized (ServerLog.syn) {
+                ServerLog.error("Handle request from " + socket.getInetAddress().getHostAddress() + " and get IOException.");
+            }
+        }
     }
 
     @Override
     public void interrupt() {
         try {
             this.socket.close();
-        } catch (IOException ignored) { }
+            synchronized (ServerLog.syn) {
+                ServerLog.log("Connection from " + socket.getInetAddress().getHostAddress() + " closed.");
+            }
+        } catch (IOException ignored) {
+            synchronized (ServerLog.syn) {
+                ServerLog.error("Closing socket with " + socket.getInetAddress().getHostAddress() + " get IOException.");
+            }
+        }
         super.interrupt();
     }
 }
