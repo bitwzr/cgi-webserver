@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>登陆界面</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      height: 100%;
+    }
+    body {
+      height: 100%;
+    }
+    .container {
+      height: 100%;
+      background-image: linear-gradient(to right, #999999, #123121);
+    }
+    .login-wrapper {
+      background-color: bisque;
+      width: 358px;
+      height: 588px;
+      border-radius: 15px;
+      padding: 0 50px;
+      position: relative;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+    }
+    .header {
+      font-size: 38px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 200px;
+    }
+    .input-item {
+      display: block;
+      width: 100%;
+      margin-bottom: 20px;
+      border: 0;
+      padding: 10px;
+      border-bottom: 1px solid rgb(128,125,125);
+      font-size: 15px;
+      outline: none;
+    }
+    .input-item::placeholder {
+      text-transform: uppercase;
+    }
+    .btn {
+      text-align: center;
+      padding: 10px;
+      width: 100%;
+      margin-top: 40px;
+      background-image: linear-gradient(to right,#a6c1ee, #123231);
+      color: #fff;
+    }
+    .msg {
+      text-align: center;
+      line-height: 88px;
+    }
+    a {
+      text-decoration-line: none;
+      color: #abc1ee;
+    }
+  </style>
+</head>
+
+
+<body>
+<div class="container">
+  <div class="login-wrapper">
+    <div class="header">!Login!</div>
+    <div class="form-wrapper">
+<!--      <input type="password" name="password" placeholder="password" class="input-item">-->
+<!--  获取文本框里的内容在inputitem里-->
+<!--      这里没有写onclick事件-->
+      <form method="POST" action="dbquery.cgi">
+        <input type="text" name="id" placeholder="STUDENT ID" class="input-item">
+        <input type="submit" value="Sign In" class="btn">
+      </form>
+      <div >
+    </div>
+    <div class="msg">
+      没有账号?
+      <a href="#">注册一个</a>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>
+
+

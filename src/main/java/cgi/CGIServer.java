@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public abstract class CGIServer {
@@ -23,6 +24,7 @@ public abstract class CGIServer {
         HttpServerConfig httpServerConfig = ConfigFactory.create(HttpServerConfig.class);
 
         String cgiURL = httpServerConfig.cgiPath() + ahh.URL;
+        System.out.println(cgiURL);
         File f = new File(cgiURL);
 
         String[] env = new String[22];
